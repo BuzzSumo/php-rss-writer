@@ -3,8 +3,7 @@
 namespace Suin\RSSWriter;
 
 /**
- * Class Item
- * @package Suin\RSSWriter
+ * Class Item.
  */
 class Item implements ItemInterface
 {
@@ -22,6 +21,9 @@ class Item implements ItemInterface
 
     /** @var array */
     protected $categories = [];
+
+    /** @var array */
+    protected $shares = array();
 
     /** @var string */
     protected $guid;
@@ -41,30 +43,42 @@ class Item implements ItemInterface
     public function title($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
     public function url($url)
     {
         $this->url = $url;
+
         return $this;
     }
 
     public function description($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
     public function contentEncoded($content)
     {
         $this->contentEncoded = $content;
+
         return $this;
     }
 
     public function category($name, $domain = null)
     {
         $this->categories[] = [$name, $domain];
+
+        return $this;
+    }
+
+    public function shares($array)
+    {
+        $this->stats[] = $array;
+
         return $this;
     }
 
@@ -72,30 +86,35 @@ class Item implements ItemInterface
     {
         $this->guid = $guid;
         $this->isPermalink = $isPermalink;
+
         return $this;
     }
 
     public function pubDate($pubDate)
     {
         $this->pubDate = $pubDate;
+
         return $this;
     }
 
     public function enclosure($url, $length = 0, $type = 'audio/mpeg')
     {
         $this->enclosure = ['url' => $url, 'length' => $length, 'type' => $type];
+
         return $this;
     }
 
     public function author($author)
     {
         $this->author = $author;
+
         return $this;
     }
 
     public function appendTo(ChannelInterface $channel)
     {
         $channel->addItem($this);
+
         return $this;
     }
 
@@ -119,6 +138,13 @@ class Item implements ItemInterface
 
             if (isset($category[1])) {
                 $element->addAttribute('domain', $category[1]);
+            }
+        }
+
+        if ($this->shares) {
+            $element = $xml->addChild('shares');
+            foreach ($this->stats[0] as $key => $value) {
+                $element->addChild('buzzsumo:'.$key, $value, 'https://buzzsumo.com');
             }
         }
 
