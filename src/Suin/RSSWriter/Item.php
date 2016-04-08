@@ -142,10 +142,10 @@ class Item implements ItemInterface
         }
 
         if (isset($this->shares)) {
-            $element = $xml->addChild('shares');
-            foreach ($this->stats[0] as $key => $value) {
-                $element->addChild('buzzsumo:'.$key, $value, 'https://buzzsumo.com');
-            }
+          $element = $xml->addChild('buzzsumo:shares', null, 'https://buzzsumo.com');
+          foreach($this->stats[0] as $key => $value) {
+            $element->addChild($key, $value);
+          }
         }
 
         if ($this->guid) {
