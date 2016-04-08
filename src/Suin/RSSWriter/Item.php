@@ -23,7 +23,7 @@ class Item implements ItemInterface
     protected $categories = [];
 
     /** @var array */
-    protected $shares = array();
+    protected $shares;
 
     /** @var string */
     protected $guid;
@@ -77,7 +77,7 @@ class Item implements ItemInterface
 
     public function shares($array)
     {
-        $this->stats[] = $array;
+        $this->shares[] = $array;
 
         return $this;
     }
@@ -143,7 +143,7 @@ class Item implements ItemInterface
 
         if (isset($this->shares)) {
           $element = $xml->addChild('buzzsumo:shares', null, 'https://buzzsumo.com');
-          foreach($this->stats[0] as $key => $value) {
+          foreach($this->shares[0] as $key => $value) {
             $element->addChild($key, $value);
           }
         }
